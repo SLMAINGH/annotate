@@ -143,6 +143,7 @@
         }
         
         .status-bar {
+            flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -150,6 +151,23 @@
             border-radius: 4px;
             padding: 10px 20px;
             color: #e0e0e0;
+            text-align: center;
+        }
+        
+        #progressLabel {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .zoom-info-bar {
+            display: flex;
+            justify-content: center;
+            background-color: #333;
+            border-radius: 4px;
+            padding: 5px;
+            margin-top: 5px;
+            color: #e0e0e0;
+            font-size: 0.9em;
         }
         
         .image-container {
@@ -290,8 +308,11 @@
             <button id="backToSetup" class="back-button">← Back to Setup</button>
             <div class="status-bar">
                 <div id="progressLabel">No file loaded</div>
-                <div id="statusLabel">Upload a CSV file to begin</div>
             </div>
+        </div>
+
+        <div class="zoom-info-bar">
+            <div id="statusLabel">Upload a CSV file to begin</div>
         </div>
 
         <div class="image-container">
