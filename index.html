@@ -145,6 +145,7 @@
         .status-bar {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             background-color: #333;
             border-radius: 4px;
             padding: 10px 20px;
@@ -173,9 +174,10 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 15px;
+            justify-content: center;
         }
         
-        .zoom-controls button, 
+        .zoom-controls button,
         .nav-controls button,
         .file-controls button {
             padding: 10px 15px;
@@ -312,9 +314,8 @@
         <div class="buttons-grid">
             <button class="option-button" data-option="Good fit">Good fit</button>
             <button class="option-button" data-option="PV">PV</button>
-            <button class="option-button" data-option="Nice land">Nice land</button>
-            <button class="option-button" data-option="Flat roof">Flat roof</button>
-            <button class="option-button" data-option="Trash">Trash</button>
+            <button class="option-button" data-option="Odsłonięta, duża działka">Odsłonięta, duża działka</button>
+            <button class="option-button" data-option="Płaski dach">Flat roof</button>
         </div>
 
         <button id="confirm" class="confirm-button">CONFIRM</button>
@@ -641,7 +642,7 @@
                 }
                 
                 const currentData = state.addressData[state.currentIndex];
-                progressLabel.textContent = `Address: ${currentData.address} | Company: ${currentData.company} | Category: ${currentData.category} (${state.currentIndex + 1}/${state.addressData.length})`;
+                progressLabel.textContent = `${currentData.company} " " ${currentData.category} " " ${currentData.address} " " (${state.currentIndex + 1}/${state.addressData.length})`;
             }
         });
     </script>
