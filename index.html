@@ -144,7 +144,7 @@
         
         .status-bar {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             background-color: #333;
             border-radius: 4px;
@@ -642,7 +642,7 @@
                 }
                 
                 const currentData = state.addressData[state.currentIndex];
-                progressLabel.textContent = `${currentData.company} " " ${currentData.category} " " ${currentData.address} " " (${state.currentIndex + 1}/${state.addressData.length})`;
+                progressLabel.textContent = `${currentData.company} | ${currentData.category} | ${currentData.address} | (${state.currentIndex + 1}/${state.addressData.length})`;
             }
         });
     </script>
