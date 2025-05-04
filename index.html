@@ -478,7 +478,8 @@
                 img.onload = function() {
                     satelliteImage.src = this.src;
                     loadingIndicator.style.display = 'none';
-                    statusLabel.textContent = `(Zoom: ${state.zoom})`;
+
+                    statusLabel.textContent = `Zoom level: ${state.zoom}`;
                     updateInfoDisplay();
                     
                     // Only reset buttons if not preserving selection
