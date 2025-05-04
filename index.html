@@ -128,7 +128,7 @@
             border-radius: 5px 5px 0 0;
         }
         
-        .back-button {
+        .nav-button {
             background-color: #333;
             border: none;
             padding: 8px 15px;
@@ -136,9 +136,10 @@
             cursor: pointer;
             font-weight: bold;
             color: #e0e0e0;
+            white-space: nowrap;
         }
         
-        .back-button:hover {
+        .nav-button:hover {
             background-color: #444;
         }
         
@@ -305,10 +306,11 @@
     <!-- Annotation View -->
     <div class="view annotation-view hidden" id="annotationView">
         <div class="top-bar">
-            <button id="backToSetup" class="back-button">← Back to Setup</button>
+            <button id="backToSetup" class="nav-button">← Back to Setup</button>
             <div class="status-bar">
                 <div id="progressLabel">No file loaded</div>
             </div>
+            <button id="downloadResults" class="nav-button">Download Results</button>
         </div>
 
         <div class="zoom-info-bar">
@@ -340,10 +342,6 @@
         </div>
 
         <button id="confirm" class="confirm-button">CONFIRM</button>
-
-        <div class="bottom-controls">
-            <button id="downloadResults">Download Results</button>
-        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
