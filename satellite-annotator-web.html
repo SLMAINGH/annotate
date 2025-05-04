@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite Roof Annotator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            height: 100vh;
+            overflow: hidden;
+            color: #e0e0e0;
+        }
+        
+        /* View Management */
+        .view {
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.5s ease;
+        }
+        
+        .setup-view {
+            background-color: #1e1e1e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+        
+        .annotation-view {
+            background-color: #1e1e1e;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        
+        .hidden {
+            transform: translateY(-100vh);
+        }
+        
+        /* Setup View Styles */
+        .setup-container {
+            max-width: 600px;
+            background-color: #2d2d2d;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            padding: 30px;
+            margin: 20px;
+            color: #e0e0e0;
+        }
+        
+        h1 {
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .setup-section {
+            margin-bottom: 25px;
+        }
+        
+        .setup-section h2 {
+            margin-bottom: 15px;
+            color: #bbbbbb;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+        }
+        
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: #333;
+            color: #e0e0e0;
+        }
+        
+        input[type="file"] {
+            margin: 10px 0;
+            color: #e0e0e0;
+        }
+        
+        .start-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        
+        .start-button:hover {
+            background-color: #45a049;
+        }
+        
+        .start-button:disabled {
+            background-color: #3a3a3a;
+            cursor: not-allowed;
+        }
+        
+        /* Annotation View Styles */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #2d2d2d;
+            border-bottom: 1px solid #444;
+            border-radius: 5px 5px 0 0;
+        }
+        
+        .back-button {
+            background-color: #333;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #e0e0e0;
+        }
+        
+        .back-button:hover {
+            background-color: #444;
+        }
+        
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            background-color: #333;
+            border-radius: 4px;
+            padding: 10px 20px;
+            color: #e0e0e0;
+        }
+        
+        .image-container {
+            flex: 1;
+            position: relative;
+            background-color: #333;
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        
+        #satelliteImage {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+        
+        .controls-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .zoom-controls button, 
+        .nav-controls button,
+        .file-controls button {
+            padding: 10px 15px;
+            margin: 0 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            opacity: 0.9;
+        }
+        
+        button:disabled {
+            background-color: #3a3a3a;
+            cursor: not-allowed;
+        }
+        
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .option-button {
+            padding: 15px;
+            text-align: center;
+            background-color: #333;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            color: #e0e0e0;
+        }
+        
+        .option-button.active {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .confirm-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .confirm-button:hover {
+            background-color: #0b7dda;
+        }
+        
+        #loadingIndicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #e0e0e0;
+            background-color: rgba(40, 40, 40, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .bottom-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Setup View -->
+    <div class="view setup-view" id="setupView">
+        <div class="setup-container">
+            <h1>Satellite Roof Annotator</h1>
+            
+            <div class="setup-section">
+                <h2>Google Maps API Key</h2>
+                <p>Enter your Google Maps API key to use this application:</p>
+                <input type="password" id="apiKey" placeholder="Enter your Google Maps API Key" />
+            </div>
+
+            <div class="setup-section">
+                <h2>Upload Addresses</h2>
+                <p>Select a CSV file with address, company, category (no headers):</p>
+                <input type="file" id="csvFile" accept=".csv" />
+            </div>
+
+            <button id="startButton" class="start-button" disabled>START ANNOTATION</button>
+        </div>
+    </div>
+
+    <!-- Annotation View -->
+    <div class="view annotation-view hidden" id="annotationView">
+        <div class="top-bar">
+            <button id="backToSetup" class="back-button">← Back to Setup</button>
+            <div class="status-bar">
+                <div id="progressLabel">No file loaded</div>
+                <div id="statusLabel">Upload a CSV file to begin</div>
+            </div>
+        </div>
+
+        <div class="image-container">
+            <img id="satelliteImage" alt="Satellite View" />
+            <div id="loadingIndicator">Loading...</div>
+        </div>
+
+        <div class="controls-section">
+            <div class="zoom-controls">
+                <button id="zoomIn">Zoom In</button>
+                <button id="zoomOut">Zoom Out</button>
+            </div>
+            
+            <div class="nav-controls">
+                <button id="prevAddress" disabled>Previous</button>
+                <button id="nextAddress" disabled>Next</button>
+            </div>
+        </div>
+
+        <div class="buttons-grid">
+            <button class="option-button" data-option="Good fit">Good fit</button>
+            <button class="option-button" data-option="PV">PV</button>
+            <button class="option-button" data-option="Nice land">Nice land</button>
+            <button class="option-button" data-option="Flat roof">Flat roof</button>
+            <button class="option-button" data-option="Trash">Trash</button>
+        </div>
+
+        <button id="confirm" class="confirm-button">CONFIRM</button>
+
+        <div class="bottom-controls">
+            <button id="downloadResults">Download Results</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements - Setup View
+            const setupView = document.getElementById('setupView');
+            const annotationView = document.getElementById('annotationView');
+            const apiKeyInput = document.getElementById('apiKey');
+            const csvFileInput = document.getElementById('csvFile');
+            const startButton = document.getElementById('startButton');
+            const backToSetupButton = document.getElementById('backToSetup');
+            
+            // DOM Elements - Annotation View
+            const satelliteImage = document.getElementById('satelliteImage');
+            const zoomInBtn = document.getElementById('zoomIn');
+            const zoomOutBtn = document.getElementById('zoomOut');
+            const prevBtn = document.getElementById('prevAddress');
+            const nextBtn = document.getElementById('nextAddress');
+            const confirmBtn = document.getElementById('confirm');
+            const downloadBtn = document.getElementById('downloadResults');
+            const progressLabel = document.getElementById('progressLabel');
+            const statusLabel = document.getElementById('statusLabel');
+            const optionButtons = document.querySelectorAll('.option-button');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+
+            // App State
+            const state = {
+                addressData: [], // Will store objects with address, company, category
+                currentIndex: 0,
+                zoom: 20,
+                results: [],
+                buttonState: {
+                    "Good fit": false,
+                    "PV": false,
+                    "Nice land": false,
+                    "Flat roof": false,
+                    "Trash": false
+                },
+                fileName: ""
+            };
+
+            // Check for saved API key
+            if (localStorage.getItem('googleMapsApiKey')) {
+                apiKeyInput.value = localStorage.getItem('googleMapsApiKey');
+                validateSetupForm();
+            }
+
+            // Save API key to localStorage when entered
+            apiKeyInput.addEventListener('input', function() {
+                localStorage.setItem('googleMapsApiKey', this.value);
+                validateSetupForm();
+            });
+
+            // File Upload Handling
+            csvFileInput.addEventListener('change', function(e) {
+                validateSetupForm();
+            });
+
+            // Validate setup form to enable start button
+            function validateSetupForm() {
+                const apiKeyValid = apiKeyInput.value.trim() !== '';
+                const fileSelected = csvFileInput.files.length > 0;
+                startButton.disabled = !(apiKeyValid && fileSelected);
+            }
+
+            // Start Button - Switch to Annotation View
+            startButton.addEventListener('click', function() {
+                const file = csvFileInput.files[0];
+                if (!file || !apiKeyInput.value.trim()) return;
+
+                state.fileName = file.name;
+                
+                // Parse the CSV file
+                Papa.parse(file, {
+                    skipEmptyLines: true,
+                    complete: function(results) {
+                        state.addressData = results.data.map(row => ({
+                            address: row[0],
+                            company: row[1],
+                            category: row[2]
+                        }));
+                        state.currentIndex = 0;
+                        state.zoom = 20;
+                        state.results = [];
+                        
+                        // Update UI
+                        prevBtn.disabled = true;
+                        nextBtn.disabled = state.addressData.length <= 1;
+                        updateInfoDisplay();
+                        statusLabel.textContent = `Loaded: ${file.name}`;
+                        
+                        // Switch to annotation view
+                        setupView.classList.add('hidden');
+                        annotationView.classList.remove('hidden');
+                        
+                        // Load first image
+                        loadSatelliteImage();
+                    },
+                    error: function(error) {
+                        alert(`Error parsing CSV: ${error}`);
+                    }
+                });
+            });
+
+            // Back to Setup button
+            backToSetupButton.addEventListener('click', function() {
+                if (state.results.length > 0) {
+                    if (confirm('Save results before returning to setup?')) {
+                        downloadResults();
+                    }
+                }
+                
+                // Switch to setup view
+                annotationView.classList.add('hidden');
+                setupView.classList.remove('hidden');
+            });
+
+            // Load Satellite Image
+            function loadSatelliteImage(preserveSelection = false) {
+                if (state.addressData.length === 0 || !apiKeyInput.value) {
+                    return;
+                }
+
+                if (state.currentIndex >= state.addressData.length) {
+                    statusLabel.textContent = "All addresses annotated!";
+                    satelliteImage.src = "";
+                    return;
+                }
+
+                const currentData = state.addressData[state.currentIndex];
+                const address = currentData.address;
+                const apiKey = apiKeyInput.value;
+                
+                const params = {
+                    center: address.replace(/ /g, "+"),
+                    zoom: state.zoom,
+                    size: "600x600", 
+                    maptype: "satellite",
+                    style: "feature:all|element:labels|visibility:off",
+                    markers: `color:red|label:${state.currentIndex+1}|${address}`,
+                    key: apiKey
+                };
+
+                const baseUrl = "https://maps.googleapis.com/maps/api/staticmap?";
+                const url = baseUrl + Object.entries(params)
+                    .map(([k, v]) => `${k}=${v}`)
+                    .join('&');
+
+                loadingIndicator.style.display = 'block';
+
+                // Create a new image element
+                const img = new Image();
+                img.onload = function() {
+                    satelliteImage.src = this.src;
+                    loadingIndicator.style.display = 'none';
+                    statusLabel.textContent = `${address} (Zoom: ${state.zoom})`;
+                    updateInfoDisplay();
+                    
+                    // Only reset buttons if not preserving selection
+                    if (!preserveSelection) {
+                        resetOptionButtons();
+                    }
+                };
+                
+                img.onerror = function() {
+                    loadingIndicator.style.display = 'none';
+                    statusLabel.textContent = `Error loading image for: ${address}`;
+                    alert(`Failed to load image. Please check your API key and try again.`);
+                };
+                
+                img.src = url;
+            }
+
+            // Zoom Controls
+            zoomInBtn.addEventListener('click', function() {
+                if (state.zoom < 21) {
+                    state.zoom++;
+                    loadSatelliteImage(true); // Pass true to preserve button selections
+                }
+            });
+
+            zoomOutBtn.addEventListener('click', function() {
+                if (state.zoom > 1) {
+                    state.zoom--;
+                    loadSatelliteImage(true); // Pass true to preserve button selections
+                }
+            });
+
+            // Navigation Controls
+            prevBtn.addEventListener('click', function() {
+                if (state.currentIndex > 0) {
+                    state.currentIndex--;
+                    prevBtn.disabled = state.currentIndex === 0;
+                    nextBtn.disabled = false;
+                    loadSatelliteImage();
+                }
+            });
+
+            nextBtn.addEventListener('click', function() {
+                if (state.currentIndex < state.addressData.length - 1) {
+                    state.currentIndex++;
+                    prevBtn.disabled = false;
+                    nextBtn.disabled = state.currentIndex === state.addressData.length - 1;
+                    loadSatelliteImage();
+                }
+            });
+
+            // Option Buttons
+            optionButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const option = this.getAttribute('data-option');
+                    state.buttonState[option] = !state.buttonState[option];
+                    this.classList.toggle('active', state.buttonState[option]);
+                });
+            });
+
+            function resetOptionButtons() {
+                // Reset all button states
+                Object.keys(state.buttonState).forEach(key => {
+                    state.buttonState[key] = false;
+                });
+                
+                // Reset button appearances
+                optionButtons.forEach(button => {
+                    button.classList.remove('active');
+                });
+            }
+
+            // Confirm Button
+            confirmBtn.addEventListener('click', function() {
+                if (state.addressData.length === 0 || state.currentIndex >= state.addressData.length) {
+                    return;
+                }
+
+                const currentData = state.addressData[state.currentIndex];
+                const result = {
+                    Address: currentData.address,
+                    Company: currentData.company,
+                    Category: currentData.category,
+                    Zoom: state.zoom
+                };
+
+                // Add button states
+                Object.keys(state.buttonState).forEach(key => {
+                    result[key] = state.buttonState[key];
+                });
+
+                state.results.push(result);
+                
+                // Move to next address if available
+                if (state.currentIndex < state.addressData.length - 1) {
+                    state.currentIndex++;
+                    prevBtn.disabled = false;
+                    nextBtn.disabled = state.currentIndex === state.addressData.length - 1;
+                    state.zoom = 20; // Reset zoom for next address
+                    loadSatelliteImage();
+                } else {
+                    progressLabel.textContent = `All ${state.addressData.length} addresses annotated. `;
+                    statusLabel.textContent = `Download your results.`;
+                    satelliteImage.src = "";
+                    confirmBtn.disabled = true;
+                }
+            });
+
+            // Download Results
+            downloadBtn.addEventListener('click', function() {
+                downloadResults();
+            });
+
+            function downloadResults() {
+                if (state.results.length === 0) {
+                    alert("No data to save");
+                    return;
+                }
+
+                // Create CSV content
+                const headers = ["Address", "Company", "Category", "Zoom", ...Object.keys(state.buttonState)];
+                
+                let csvContent = headers.join(",") + "\n";
+                
+                state.results.forEach(result => {
+                    const row = headers.map(header => {
+                        // Handle special cases like commas in addresses
+                        if (header === "Address") {
+                            return `"${result[header]}"`;
+                        }
+                        return result[header];
+                    });
+                    csvContent += row.join(",") + "\n";
+                });
+
+                // Create download link
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                
+                const filename = state.fileName ? 
+                    `output_${state.fileName}` : 
+                    "satellite_annotations.csv";
+                
+                link.setAttribute("href", url);
+                link.setAttribute("download", filename);
+                link.style.visibility = 'hidden';
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+
+            // Update information display
+            function updateInfoDisplay() {
+                if (state.addressData.length === 0 || state.currentIndex >= state.addressData.length) {
+                    progressLabel.textContent = "No data loaded";
+                    return;
+                }
+                
+                const currentData = state.addressData[state.currentIndex];
+                progressLabel.textContent = `Address: ${currentData.address} | Company: ${currentData.company} | Category: ${currentData.category} (${state.currentIndex + 1}/${state.addressData.length})`;
+            }
+        });
+    </script>
+</body>
+</html>
