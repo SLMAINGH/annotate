@@ -412,7 +412,9 @@
                         state.addressData = results.data.map(row => ({
                             address: row[0],
                             company: row[1],
-                            category: row[2]
+                            category: row[2],
+                            latitude: row[3],    // New latitude column
+                            longitude: row[4]    // New longitude column
                         }));
                         state.currentIndex = 0;
                         state.zoom = 20;
@@ -464,15 +466,17 @@
 
                 const currentData = state.addressData[state.currentIndex];
                 const address = currentData.address;
+                const latitude = currentData.latitude;
+                const longitude = currentData.longitude;
                 const apiKey = apiKeyInput.value;
                 
                 const params = {
-                    center: address.replace(/ /g, "+"),
+                    center: `${latitude},${longitude}`,  // Using coordinates instead of address
                     zoom: state.zoom,
                     size: "640x640",
                     maptype: "satellite",
                     style: "feature:all|element:labels|visibility:off",
-                    markers: `color:red|label:${state.currentIndex+1}|${address}`,
+                    markers: `color:red|label:${state.currentIndex+1}|${latitude},${longitude}`,  // Using coordinates for marker
                     key: apiKey
                 };
 
@@ -573,6 +577,8 @@
                     Address: currentData.address,
                     Company: currentData.company,
                     Category: currentData.category,
+                    Latitude: currentData.latitude,
+                    Longitude: currentData.longitude,
                     Zoom: state.zoom
                 };
 
@@ -609,8 +615,8 @@
                     return;
                 }
 
-                // Create CSV content
-                const headers = ["Address", "Company", "Category", "Zoom", ...Object.keys(state.buttonState)];
+                // Create CSV content with new headers
+                const headers = ["Address", "Company", "Category", "Latitude", "Longitude", "Zoom", ...Object.keys(state.buttonState)];
                 
                 let csvContent = headers.join(",") + "\n";
                 
