@@ -181,12 +181,14 @@
             align-items: center;
             justify-content: center;
             margin: 15px 0;
+            min-height: 70vh; /* Make container taller */
         }
         
         #satelliteImage {
             max-width: 100%;
             max-height: 100%;
             display: block;
+            object-fit: contain; /* Ensures the image fits well */
         }
         
         .controls-section {
@@ -481,7 +483,7 @@
                 const params = {
                     center: address.replace(/ /g, "+"),
                     zoom: state.zoom,
-                    size: "600x600", 
+                    size: "640x640",
                     maptype: "satellite",
                     style: "feature:all|element:labels|visibility:off",
                     markers: `color:red|label:${state.currentIndex+1}|${address}`,
