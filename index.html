@@ -37,10 +37,11 @@
         
         .annotation-view {
             background-color: #1e1e1e;
-            z-index: 1;
+            width: 100vw;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            padding: 15px;
+            padding: 0;
             box-sizing: border-box;
         }
         
@@ -171,67 +172,91 @@
             font-size: 0.9em;
         }
         
-        .main-content {
-            display: flex;
-            flex-direction: row;
-            gap: 10px; /* Reduced from 15px */
+        .annotation-content-centerer {
             flex: 1;
-            margin: 10px 0;
-            justify-content: center; /* Center the content horizontally */
-        }
-        
-        .image-container {
-            flex: 0 1 auto; /* Don't force expand */
-            position: relative;
-            background-color: transparent; /* Remove the border color */
-            border-radius: 0;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 65vh;
+            position: relative;
+            width: 100vw;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .image-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 640px;
+            min-height: 640px;
+            background: transparent;
+            box-shadow: none;
             margin: 0;
+            padding: 0;
+            z-index: 1;
         }
         
         #satelliteImage {
-            max-width: 100%;
-            max-height: 100%;
+            max-width: 640px;
+            max-height: 640px;
+            width: 100%;
+            height: 100%;
             display: block;
-            box-shadow: 0 0 5px rgba(0,0,0,0.5); /* Subtle shadow instead of border */
+            object-fit: contain;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.7);
+            border-radius: 8px;
         }
         
         .controls-container {
-            width: 220px; /* Slightly narrower */
+            position: absolute;
+            right: 5vw;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 240px;
             display: flex;
             flex-direction: column;
-            gap: 8px; /* Reduced from 10px */
-            align-self: center; /* Center vertically */
+            gap: 20px;
+            align-items: stretch;
+            justify-content: center;
+            background: none;
+            box-shadow: none;
+            padding: 0;
+            z-index: 2;
         }
         
-        /* Make the controls section more compact */
-        .controls-section {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 8px;
+        .navigation-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
         }
         
-        .zoom-controls, .nav-controls {
-            display: flex;
-            justify-content: space-between;
+        .navigation-grid button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 14px 0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background 0.2s;
         }
         
-        /* Slightly reduce button sizes to make them more compact */
-        .option-button {
-            width: 100%;
-            padding: 12px 8px;
+        .navigation-grid button:hover {
+            background-color: #388e3c;
+        }
+        
+        .navigation-grid button:disabled {
+            background-color: #2e7031;
+            color: #bdbdbd;
+            cursor: not-allowed;
         }
         
         .buttons-grid {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 15px;
         }
         
         .option-button {
@@ -322,22 +347,18 @@
             <div id="statusLabel">Upload a CSV file to begin</div>
         </div>
 
-        <div class="main-content">
+        <div class="annotation-content-centerer">
             <div class="image-container">
                 <img id="satelliteImage" alt="Satellite View" />
                 <div id="loadingIndicator">Loading...</div>
             </div>
-            
             <div class="controls-container">
-                <!-- New 2x2 Grid for Zoom and Navigation Buttons -->
                 <div class="navigation-grid">
                     <button id="zoomIn">Zoom In</button>
                     <button id="zoomOut">Zoom Out</button>
                     <button id="prevAddress" disabled>Previous</button>
                     <button id="nextAddress" disabled>Next</button>
                 </div>
-
-                <!-- Existing Annotation Buttons Grid -->
                 <div class="buttons-grid">
                     <button class="option-button" data-option="Good fit">Good fit</button>
                     <button class="option-button" data-option="PV">PV</button>
@@ -345,7 +366,6 @@
                     <button class="option-button" data-option="Płaski dach">Płaski dach</button>
                     <button class="option-button" data-option="Nie wiem">Nie wiem</button>
                 </div>
-
                 <button id="confirm" class="confirm-button">CONFIRM</button>
             </div>
         </div>
