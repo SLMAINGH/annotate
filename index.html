@@ -329,18 +329,15 @@
             </div>
             
             <div class="controls-container">
-                <div class="controls-section">
-                    <div class="zoom-controls">
-                        <button id="zoomIn">Zoom In</button>
-                        <button id="zoomOut">Zoom Out</button>
-                    </div>
-                    
-                    <div class="nav-controls">
-                        <button id="prevAddress" disabled>Previous</button>
-                        <button id="nextAddress" disabled>Next</button>
-                    </div>
+                <!-- New 2x2 Grid for Zoom and Navigation Buttons -->
+                <div class="navigation-grid">
+                    <button id="zoomIn">Zoom In</button>
+                    <button id="zoomOut">Zoom Out</button>
+                    <button id="prevAddress" disabled>Previous</button>
+                    <button id="nextAddress" disabled>Next</button>
                 </div>
 
+                <!-- Existing Annotation Buttons Grid -->
                 <div class="buttons-grid">
                     <button class="option-button" data-option="Good fit">Good fit</button>
                     <button class="option-button" data-option="PV">PV</button>
