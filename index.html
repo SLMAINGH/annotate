@@ -171,6 +171,14 @@
             font-size: 0.9em;
         }
         
+        .main-content {
+            display: flex;
+            flex-direction: row;
+            gap: 15px;
+            flex: 1;
+            margin: 10px 0;
+        }
+        
         .image-container {
             flex: 1;
             position: relative;
@@ -180,9 +188,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 10px 0;
-            min-height: 55vh; /* Increased to make image larger */
-            max-height: none; /* Remove max height constraint */
+            min-height: 65vh;
+            margin: 0;
         }
         
         #satelliteImage {
@@ -190,6 +197,13 @@
             max-height: 100%;
             display: block;
             object-fit: contain; /* Ensures the image fits well */
+        }
+        
+        .controls-container {
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         
         .controls-section {
@@ -212,14 +226,15 @@
         }
         
         .buttons-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* Back to 2 columns */
-            gap: 5px;
-            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
         }
         
         .option-button {
-            padding: 15px;
+            width: 100%;
+            padding: 15px 10px;
             text-align: center;
             background-color: #333;
             border: none;
@@ -305,33 +320,36 @@
             <div id="statusLabel">Upload a CSV file to begin</div>
         </div>
 
-        <div class="image-container">
-            <img id="satelliteImage" alt="Satellite View" />
-            <div id="loadingIndicator">Loading...</div>
-        </div>
-
-        <div class="controls-section">
-            <div class="zoom-controls">
-                <button id="zoomIn">Zoom In</button>
-                <button id="zoomOut">Zoom Out</button>
+        <div class="main-content">
+            <div class="image-container">
+                <img id="satelliteImage" alt="Satellite View" />
+                <div id="loadingIndicator">Loading...</div>
             </div>
             
-            <div class="nav-controls">
-                <button id="prevAddress" disabled>Previous</button>
-                <button id="nextAddress" disabled>Next</button>
+            <div class="controls-container">
+                <div class="controls-section">
+                    <div class="zoom-controls">
+                        <button id="zoomIn">Zoom In</button>
+                        <button id="zoomOut">Zoom Out</button>
+                    </div>
+                    
+                    <div class="nav-controls">
+                        <button id="prevAddress" disabled>Previous</button>
+                        <button id="nextAddress" disabled>Next</button>
+                    </div>
+                </div>
+
+                <div class="buttons-grid">
+                    <button class="option-button" data-option="Good fit">Good fit</button>
+                    <button class="option-button" data-option="PV">PV</button>
+                    <button class="option-button" data-option="Odsłonięta, duża działka">Odsłonięta, duża działka</button>
+                    <button class="option-button" data-option="Płaski dach">Płaski dach</button>
+                    <button class="option-button" data-option="Nie wiem">Nie wiem</button>
+                </div>
+
+                <button id="confirm" class="confirm-button">CONFIRM</button>
             </div>
         </div>
-
-        <div class="buttons-grid">
-            <button class="option-button" data-option="Good fit">Good fit</button>
-            <button class="option-button" data-option="PV">PV</button>
-            <button class="option-button" data-option="Odsłonięta, duża działka">Odsłonięta, duża działka</button>
-            <button class="option-button" data-option="Płaski dach">Płaski dach</button>
-            <button class="option-button" data-option="Nie wiem">Nie wiem</button>
-
-        </div>
-
-        <button id="confirm" class="confirm-button">CONFIRM</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
