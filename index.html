@@ -174,16 +174,17 @@
         .main-content {
             display: flex;
             flex-direction: row;
-            gap: 15px;
+            gap: 10px; /* Reduced from 15px */
             flex: 1;
             margin: 10px 0;
+            justify-content: center; /* Center the content horizontally */
         }
         
         .image-container {
-            flex: 1;
+            flex: 0 1 auto; /* Don't force expand */
             position: relative;
-            background-color: #333;
-            border-radius: 5px;
+            background-color: transparent; /* Remove the border color */
+            border-radius: 0;
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -196,33 +197,34 @@
             max-width: 100%;
             max-height: 100%;
             display: block;
-            object-fit: contain; /* Ensures the image fits well */
+            box-shadow: 0 0 5px rgba(0,0,0,0.5); /* Subtle shadow instead of border */
         }
         
         .controls-container {
-            width: 250px;
+            width: 220px; /* Slightly narrower */
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px; /* Reduced from 10px */
+            align-self: center; /* Center vertically */
         }
         
+        /* Make the controls section more compact */
         .controls-section {
             display: flex;
-            justify-content: center;
-            margin-bottom: 10px; /* Reduced margin */
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 8px;
         }
         
-        .zoom-controls button, 
-        .nav-controls button {
-            padding: 10px 15px;
-            margin: 0 5px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
+        .zoom-controls, .nav-controls {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        /* Slightly reduce button sizes to make them more compact */
+        .option-button {
+            width: 100%;
+            padding: 12px 8px;
         }
         
         .buttons-grid {
