@@ -616,14 +616,18 @@
                 
                 state.results.forEach(result => {
                     const row = headers.map(header => {
-                        // Handle special cases like commas in addresses
-                        if (header === "Address") {
+                        // Handle text fields that might contain commas or special characters
+                        if (header === "Address" || header === "Company" || header === "Category") {
                             return `"${result[header]}"`;
                         }
                         return result[header];
                     });
                     csvContent += row.join(",") + "\n";
                 });
+
+                // Add UTF-8 BOM (Byte Order Mark) to help Excel and other apps recognize encoding
+                const BOM = "\uFEFF";
+                csvContent = BOM + csvContent;
 
                 // Create download link
                 const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
